@@ -1,0 +1,22 @@
+[project]
+name = "gtm-intelligence-system"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.5.0",
+    "crewai>=1.15.17",
+    "duckduckgo-search>=8.1.1",
+    "pydantic>=2.12.5",
+    "pytest>=9.1.1",
+    "python-dotenv>=1.2.3",
+    "requests>=2.34.2",
+    "seltz>=1.9.0",
+    "streamlit>=1.62.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+

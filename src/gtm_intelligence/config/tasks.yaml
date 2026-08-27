@@ -1,0 +1,41 @@
+web_intelligence_task:
+  description: >
+    Use Seltz Web Indexing tools to research the market landscape for {target_domain}.
+    Identify top 3-5 direct competitors, their latest feature announcements, pricing structure, tech stack signals,
+    and open job postings. Gather clear source URLs for all findings.
+  expected_output: >
+    Detailed raw research report on competitors, pricing tiers, hiring signals, and Seltz source URLs.
+  agent: market_intelligence_agent
+
+competitor_icp_profiling_task:
+  description: >
+    Synthesize the raw web intelligence gathered in the previous step into a structured competitor feature matrix
+    and an Ideal Customer Profile (ICP) breakdown for {target_domain}. Identify core buyer pain points and 3-5 specific buying triggers.
+  expected_output: >
+    Structured competitor matrix and target ICP breakdown with buyer personas and buying triggers.
+  agent: competitor_icp_profiler_agent
+
+fact_verification_task:
+  description: >
+    Audit the competitor feature matrix and pricing details gathered so far.
+    Verify that every competitive claim is supported by a valid web source citation. Assign a verification confidence rating (High/Medium/Low).
+  expected_output: >
+    Fact-checked competitive matrix with verification confidence scores and direct source citations.
+  agent: fact_checker_auditor_agent
+
+gtm_strategy_task:
+  description: >
+    Develop a comprehensive GTM positioning strategy for {target_domain}.
+    Create sales battlecards for each top competitor, including win themes, objection handling guides, key differentiators,
+    and landmines to lay during sales calls.
+  expected_output: >
+    Complete set of Sales Battlecards and GTM Value Proposition positioning guide.
+  agent: gtm_strategist_agent
+
+outreach_blueprint_task:
+  description: >
+    Build a multi-channel outbound campaign for the target ICPs in {target_domain}.
+    Include a 3-step personalized email sequence (with subject lines, copy, and CTAs) and LinkedIn touchpoint angles.
+  expected_output: >
+    Multi-channel sales enablement outreach blueprint formatted as structured JSON and Markdown.
+  agent: outreach_blueprint_agent

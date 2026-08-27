@@ -14,6 +14,8 @@ from gtm_intelligence.crew import GtmIntelligenceCrew
 from gtm_intelligence.storage.drift_engine import CompetitorDriftEngine
 from gtm_intelligence.logging.audit_logger import PulseAuditLogger
 from gtm_intelligence.evaluation.evaluator import PulseEvaluator
+from gtm_intelligence.integrations.crm_sync import CRMSyncEngine, CRMDealWebhookPayload
+from gtm_intelligence.integrations.slack_bot import SlackBotEngine
 
 app = FastAPI(
     title="Pulse: Autonomous GTM Operating System API",
@@ -162,15 +164,19 @@ async def get_competitor_drift(target_domain: str):
     )
 
 
-@app.get("/api/v1/audit/logs", tags=["Observability"])
-async def list_audit_logs(limit: int = 10):
-    """List recent structured audit logs."""
-    log_files = sorted(audit_logger.log_dir.glob("pulse_*.json"), reverse=True)
-    logs = []
-    for f in log_files[:limit]:
-        try:
-            with open(f, "r", encoding="utf-8") as file:
-                logs.append(json.load(file))
-        except Exception:
-            pass
-    return {"count": len(logs), "logs": logs}
+crm_sync_engine = CRMSyncEngine()
+slack_bot_engine = SlackBotEngine()
+
+
+@app.post("/api/v1/crm/webhook", tags=["Integrations"])
+async def handle_crm_webhook(payload: CRMDealWebhookPayload):
+    """Handle incoming HubSpot/Salesforce deal-stage webhook."""
+    result = crm_sync_engine.process_deal_event(payload)
+    return result
+
+
+@app.post("/api/v1/slack/command", tags=["Integrations"])
+async def handle_slack_command(text: str = "intel General"):
+    """Handle incoming Slack slash command (e.g. /pulse intel AcmeCorp)."""
+    return slack_bot_engine.handle_slash_command(text)
+

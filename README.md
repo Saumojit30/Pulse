@@ -10,7 +10,6 @@
 [![Web Indexing](https://img.shields.io/badge/Web%20Knowledge-Seltz%20AI-green.svg)](https://seltz.ai)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI%20%26%20Uvicorn-009688.svg)](https://fastapi.tiangolo.com)
 [![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-FF4B4B.svg)](https://streamlit.io)
-[![Tests](https://img.shields.io/badge/Tests-18%2F18%20Passed-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 <br/>
@@ -35,7 +34,6 @@
   - [Interactive Slack Bot](#interactive-slack-bot)
   - [Apollo / Instantly Outbound Sequence Dispatcher](#apollo--instantly-outbound-sequence-dispatcher)
 - [🔍 Observability, Token Cost Tracking & Quality Evaluation](#-observability-token-cost-tracking--quality-evaluation)
-- [🧪 Automated Test Suite](#-automated-test-suite)
 - [📁 Project Structure](#-project-structure)
 - [📄 License](#-license)
 
@@ -57,35 +55,40 @@ Most GTM intelligence tools fail for three reasons:
 
 ## 🏗️ System Architecture
 
-```
-                                  +---------------------------------------+
-                                  |     Pulse Event Gateway (FastAPI)     |
-                                  +---------------------------------------+
-                                                     |
-             +---------------------------------------+---------------------------------------+
-             |                                                                               |
-             v                                                                               v
-   [24/7 Sensing Daemon]                                                           [CRM & Slack Webhooks]
-   • Continuous Seltz indexing                                                     • HubSpot / Salesforce deals
-   • Drift & delta calculation                                                     • /pulse slash commands
-             \                                                                               /
-              \                                                                             /
-               v                                                                           v
-         +-------------------------------------------------------------------------------------+
-         |                        Pulse Agentic Reasoning & Audit Core                         |
-         |                                                                                     |
-         |  [MarketIntelligenceAgent]  -->  [CompetitorDriftEngine]                            |
-         |             |                               |                                       |
-         |             v                               v                                       |
-         |  [FactCheckerAuditorAgent] -->   [GTMStrategistAgent]                                |
-         +-------------------------------------------------------------------------------------+
-                                                     |
-             +---------------------------------------+---------------------------------------+
-             |                                                                               |
-             v                                                                               v
-   [Sales Enablement (CRM / Slack)]                                                [Outbound Dispatcher]
-   • Deal-stage battlecards                                                        • Apollo / Instantly campaigns
-   • Real-time Slack cards                                                         • Jira feature gap alerts
+```mermaid
+flowchart TD
+    subgraph Ingestion ["1. Event Ingestion & Sensing Layer"]
+        Daemon["24/7 Sensing Daemon<br/>(Seltz Web Indexer)"]
+        Webhooks["CRM & Inbound Webhooks<br/>(HubSpot, Salesforce, Slack)"]
+    end
+
+    Gateway["⚡ Pulse Event Gateway (FastAPI)"]
+    Daemon --> Gateway
+    Webhooks --> Gateway
+
+    subgraph Core ["2. Agentic Reasoning & Verification Core"]
+        MarketAgent["Market Intelligence Agent<br/>(Seltz Live Web Indexing)"]
+        DriftEngine["Competitor Drift Engine<br/>(Delta & Snapshot Diffing)"]
+        FactAuditor["Fact-Checker & Quality Auditor<br/>(3-Layer Citation Verification)"]
+        GTMStrategist["Chief GTM Strategist<br/>(Battlecards & Positioning Hooks)"]
+
+        MarketAgent --> DriftEngine
+        MarketAgent --> FactAuditor
+        FactAuditor --> GTMStrategist
+        DriftEngine --> GTMStrategist
+    end
+
+    Gateway --> MarketAgent
+
+    subgraph Actions ["3. Closed-Loop Revenue Execution"]
+        CRM["Sales Enablement<br/>(HubSpot & Salesforce Deal-Stage Sync)"]
+        Slack["Real-Time Slack Bot<br/>(/pulse intel & Drift Alerts)"]
+        Outbound["Outbound Sales Dispatcher<br/>(Apollo & Instantly Campaigns)"]
+    end
+
+    GTMStrategist --> CRM
+    GTMStrategist --> Slack
+    GTMStrategist --> Outbound
 ```
 
 ---
@@ -115,8 +118,8 @@ Pulse orchestrates 5 specialized CrewAI agents in sequential and reflective loop
 
 ### 2. Clone & Install Dependencies
 ```bash
-git clone https://github.com/Saumojit30/Pulse-GTM-Intelligence-System.git
-cd Pulse-GTM-Intelligence-System
+git clone https://github.com/Saumojit30/Pulse.git
+cd Pulse
 
 # uv automatically syncs virtual environment and dependencies
 uv sync
@@ -287,28 +290,6 @@ Every run generates a structured audit log stored in `gtm_history/audit_logs/`:
     }
   }
 }
-```
-
----
-
-## 🧪 Automated Test Suite
-
-Pulse features comprehensive test coverage across 7 test suites (18 tests total), verifying API endpoints, daemon scheduling, integrations, drift calculations, rate-limit resilience, and anti-hallucination evaluation:
-
-```bash
-uv run pytest
-```
-
-```text
-tests/test_api.py ...                                                    [ 16%]
-tests/test_daemon.py ..                                                  [ 27%]
-tests/test_drift_engine.py .                                             [ 33%]
-tests/test_integrations.py ...                                           [ 50%]
-tests/test_logging_and_evaluation.py ..                                  [ 61%]
-tests/test_robustness.py .....                                           [ 88%]
-tests/test_seltz_tool.py ..                                              [100%]
-
-======================= 18 passed in 43.02s =======================
 ```
 
 ---

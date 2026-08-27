@@ -1,0 +1,22 @@
+{
+  "run_id": "pulse_20260827_150111_f6295b",
+  "target_domain": "TestSaaS",
+  "mode": "deep",
+  "started_at": "2026-08-27T15:01:11.176239",
+  "status": "SUCCESS",
+  "duration_seconds": 0.02,
+  "tool_calls": [],
+  "tokens_and_cost": {
+    "estimated_input_tokens": 992,
+    "estimated_output_tokens": 1500,
+    "estimated_cost_usd": 0.01748,
+    "seltz_api_calls_count": 0
+  },
+  "fact_check_metrics": {
+    "claims_audited": 0,
+    "claims_verified": 0,
+    "grounding_score": 1.0
+  },
+  "quality_grade": "PENDING",
+  "completed_at": "2026-08-27T15:01:11.196797"
+}

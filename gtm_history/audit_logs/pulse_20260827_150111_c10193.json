@@ -1,0 +1,44 @@
+{
+  "run_id": "pulse_20260827_150111_c10193",
+  "target_domain": "CacheTestDomain",
+  "mode": "standard",
+  "started_at": "2026-08-27T15:01:11.068543",
+  "status": "SUCCESS",
+  "duration_seconds": 0.0,
+  "tool_calls": [],
+  "tokens_and_cost": {
+    "estimated_input_tokens": 1012,
+    "estimated_output_tokens": 1500,
+    "estimated_cost_usd": 0.01753,
+    "seltz_api_calls_count": 0
+  },
+  "fact_check_metrics": {
+    "claims_audited": 0,
+    "claims_verified": 0,
+    "grounding_score": 1.0
+  },
+  "quality_grade": "C",
+  "completed_at": "2026-08-27T15:01:11.070745",
+  "quality_evaluation": {
+    "overall_score": 0.6,
+    "grade": "C",
+    "passed": false,
+    "grounding": {
+      "grounding_score": 0.8,
+      "cited_urls_count": 0,
+      "status": "PASS",
+      "message": "Citations detected in output."
+    },
+    "completeness": {
+      "completeness_score": 0.4,
+      "pillars_checked": {
+        "competitor": false,
+        "pricing": true,
+        "icp": false,
+        "battlecard": true,
+        "outreach": false
+      },
+      "is_complete": false
+    }
+  }
+}

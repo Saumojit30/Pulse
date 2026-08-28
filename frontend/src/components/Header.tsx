@@ -1,68 +1,49 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Zap, Activity, ShieldCheck, Database, Radio } from "lucide-react";
-import { pulseApi, HealthResponse } from "../lib/api";
+import React from "react";
+import { Search, Command, Plus, Radio, Sparkles, Filter, Bell } from "lucide-react";
 
-export function Header() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [isLive, setIsLive] = useState(false);
+interface HeaderProps {
+  onQuickScan: () => void;
+}
 
-  useEffect(() => {
-    async function checkBackend() {
-      try {
-        const data = await pulseApi.getHealth();
-        setHealth(data);
-        setIsLive(true);
-      } catch (err) {
-        setIsLive(false);
-      }
-    }
-    checkBackend();
-    const interval = setInterval(checkBackend, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
+export function Header({ onQuickScan }: HeaderProps) {
   return (
-    <header className="border-b border-slate-800/80 bg-[#0c111d]/90 backdrop-blur sticky top-0 z-50 px-6 py-3.5">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Zap className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-lg tracking-tight text-white">Pulse</span>
-              <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-indigo-950/80 border border-indigo-700/50 text-indigo-300">
-                Autonomous GTM OS
-              </span>
-            </div>
-            <p className="text-xs text-slate-400">Market Sensing • Seltz Web Indexing • Revenue Execution</p>
-          </div>
-        </div>
-
-        {/* Status Indicators */}
-        <div className="flex items-center gap-4 text-xs">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-            <Database className="h-3.5 w-3.5 text-cyan-400" />
-            <span>Indexer: <b>{health?.indexing_mode || "Seltz Live API"}</b></span>
-          </div>
-
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-            <span>Anti-Hallucination: <b>Active</b></span>
-          </div>
-
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
-            <span className="relative flex h-2 w-2">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${isLive ? 'bg-emerald-400' : 'bg-amber-400'} opacity-75`}></span>
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${isLive ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-            </span>
-            <span className={isLive ? "text-emerald-400 font-medium" : "text-amber-400 font-medium"}>
-              {isLive ? "Backend Live" : "Offline Mode"}
-            </span>
+    <header className="h-16 border-b border-white/[0.08] bg-[#07090e]/80 backdrop-blur-xl px-8 flex items-center justify-between sticky top-0 z-40">
+      {/* Search & Command Bar */}
+      <div className="flex items-center gap-4 flex-1 max-w-xl">
+        <div className="relative w-full">
+          <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-zinc-500" />
+          <input
+            type="text"
+            placeholder="Search active opportunities, competitors, pricing drift, or battlecards..."
+            className="w-full bg-zinc-900/70 border border-white/[0.08] rounded-xl pl-10 pr-16 py-2 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/50 transition-all font-sans"
+          />
+          <div className="absolute right-3 top-2 flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-zinc-800 border border-white/10 text-[10px] font-mono text-zinc-400">
+            <Command className="h-3 w-3" />
+            <span>K</span>
           </div>
         </div>
+      </div>
+
+      {/* Right Controls */}
+      <div className="flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/60 border border-white/[0.06] text-xs">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+          </span>
+          <span className="text-zinc-400">Sensing Daemon:</span>
+          <span className="font-mono text-cyan-400 font-semibold">Active (Watchlist: 3 Targets)</span>
+        </div>
+
+        <button
+          onClick={onQuickScan}
+          className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 text-white text-xs font-semibold flex items-center gap-2 hover:opacity-95 shadow-lg shadow-indigo-500/20 ring-1 ring-white/20 transition-all"
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          <span>New GTM Scan</span>
+        </button>
       </div>
     </header>
   );

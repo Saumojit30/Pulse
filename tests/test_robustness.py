@@ -75,4 +75,4 @@ def test_drift_engine_corrupt_data_resilience():
         assert drift["status"] == "Drift computed successfully"
         assert isinstance(drift["drift_events"], list)
     finally:
-        shutil.rmtree(temp_dir)
+        shutil.rmtree(temp_dir, ignore_errors=True)

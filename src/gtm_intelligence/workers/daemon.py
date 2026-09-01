@@ -13,6 +13,7 @@ from gtm_intelligence.crew import GtmIntelligenceCrew
 from gtm_intelligence.storage.drift_engine import CompetitorDriftEngine
 from gtm_intelligence.exporters.slack_exporter import SlackExporter
 from gtm_intelligence.logging.audit_logger import PulseAuditLogger
+from gtm_intelligence.tools.seltz_tool import set_active_audit_context, clear_active_audit_context
 
 logger = logging.getLogger(__name__)
 
@@ -58,13 +59,15 @@ class PulseSensingDaemon:
         """Perform a single target scan, compute drift, and dispatch alerts."""
         logger.info(f"[*] Pulse Daemon: Starting scan for '{target_domain}'...")
         run_record = self.audit_logger.create_run_log(target_domain, mode="deep")
+        set_active_audit_context(self.audit_logger, run_record)
 
         try:
             crew = GtmIntelligenceCrew(mode="deep").crew()
             result_markdown = str(crew.kickoff(inputs={"target_domain": target_domain}))
 
-            # Save snapshot
+            # Save structured snapshot with auto-extracted competitor models
             snapshot_path = self.drift_engine.save_snapshot(target_domain, {
+                "target_domain": target_domain,
                 "output_summary": result_markdown[:500],
                 "full_report": result_markdown
             })
@@ -94,22 +97,33 @@ class PulseSensingDaemon:
                 "status": "FAILED",
                 "error": str(e)
             }
+        finally:
+            clear_active_audit_context()
 
     def run_single_cycle(self) -> List[Dict[str, Any]]:
-        """Run a single monitoring cycle across all watchlist targets."""
+        """Run a single monitoring cycle across all watchlist targets synchronously."""
         results = []
-        for target in self.watchlist:
+        for target in list(self.watchlist):
             res = self.scan_target(target)
             results.append(res)
         return results
 
     async def run_forever(self) -> None:
-        """Run the 24/7 background sensing loop."""
+        """Run the 24/7 background sensing loop using asyncio.to_thread to avoid blocking."""
         self._running = True
         logger.info(f"[*] Pulse Sensing Daemon started. Watchlist count: {len(self.watchlist)}")
         while self._running:
-            self.run_single_cycle()
-            await asyncio.sleep(self.check_interval_seconds)
+            for target in list(self.watchlist):
+                if not self._running:
+                    break
+                try:
+                    await asyncio.to_thread(self.scan_target, target)
+                except Exception as e:
+                    logger.error(f"Error in background sensing cycle for {target}: {str(e)}")
+            try:
+                await asyncio.sleep(self.check_interval_seconds)
+            except asyncio.CancelledError:
+                break
 
     def stop(self) -> None:
         """Stop the daemon loop."""

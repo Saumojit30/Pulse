@@ -17,7 +17,7 @@
 
 <br/>
 
-**Pulse** is a distributed, event-driven Go-To-Market (GTM) intelligence system designed to eliminate manual market research and unverified competitive assertions. Built on a resilient **Dual-Engine Architecture** (Native Seltz AI web indexing + optional CrewAI multi-agent reasoning) and paired with an authentic **2026 Dark Monochrome Workspace** (Linear / Raycast / Clay ergonomics), Pulse continuously senses competitor shifts 24/7, audits facts against live web citations, tracks price and feature drift in SQLite, and automates downstream CRM, Slack, and outbound revenue workflows.
+**Pulse** is a distributed, event-driven Go-To-Market (GTM) intelligence system designed to eliminate manual market research and unverified competitive assertions. Built on a resilient **Dual-Engine Architecture** (Native Seltz AI web indexing + optional CrewAI multi-agent reasoning) and paired with an ultra-dense, keyboard-driven Next.js 14 workspace, Pulse continuously senses competitor shifts 24/7, audits facts against live web citations, tracks price and feature drift in SQLite, and automates downstream CRM, Slack, and outbound revenue workflows.
 
 </div>
 
@@ -33,14 +33,14 @@
   - [3. Concurrency Semaphore & Asynchronous SSE Streaming](#3-concurrency-semaphore--asynchronous-sse-streaming)
   - [4. Embedded SQLite Persistence with WAL Mode](#4-embedded-sqlite-persistence-with-wal-mode)
   - [5. Resilient Indexing with Circuit Breaker & Connection Pooling](#5-resilient-indexing-with-circuit-breaker--connection-pooling)
-- [2026 YC-Grade Frontend Workspace](#2026-yc-grade-frontend-workspace)
+- [Web Workspace & User Interface](#web-workspace--user-interface)
 - [Quick Start Guide](#quick-start-guide)
   - [Prerequisites](#prerequisites)
   - [1. Backend Deployment (`uv`)](#1-backend-deployment-uv)
   - [2. Frontend Deployment (`Next.js 14`)](#2-frontend-deployment-nextjs-14)
-  - [3. Environment Credentials](#3-environment-credentials)
+  - [3. Testing](#3-testing)
+  - [4. Environment Credentials](#4-environment-credentials)
 - [REST API & SSE Event Specification](#rest-api--sse-event-specification)
-- [Automated Testing & Production Verification](#automated-testing--production-verification)
 - [Directory Topology](#directory-topology)
 - [License](#license)
 
@@ -102,10 +102,10 @@ flowchart TD
 
     DualCore --> StorageLayer
 
-    subgraph Presentation ["4. 2026 YC-Grade Frontend (:3000)"]
+    subgraph Presentation ["4. Web Workspace & User Interface (:3000)"]
         DataGrid["Full-Width DataGrid (32px Dense Rows)"]
         Inspector["Slide-Over Inspector & Executive Dossier"]
-        CmdK["Raycast-Style Command Palette (Cmd+K)"]
+        CmdK["Command Palette (Cmd+K)"]
         LiveStream["SSE Real-time Step Indicators"]
     end
 
@@ -151,17 +151,19 @@ Every report undergoes strict grounding validation via `PulseEvaluator`:
 
 ---
 
-## 2026 YC-Grade Frontend Workspace
+## Web Workspace & User Interface
 
-The frontend is built with Next.js 14 and Tailwind CSS, adhering to strict enterprise software standards inspired by **Linear**, **Raycast**, and **Clay**:
+The frontend is built with Next.js 14 and Tailwind CSS, focusing on information density and keyboard ergonomics:
 
-| Capability | Implementation Details |
-| :--- | :--- |
-| **Monochrome Design System** | Palette restricted to `#090A0C` (canvas), `#101114` (surfaces), `#1F2127` (hairlines), and high-contrast `#F4F4F6` text. **Zero AI color slop** (no purple gradients or muddy amber/green accents). |
-| **Full-Width DataGrid** | 32px dense row height showing 25+ target accounts above the fold. Monospace tabular numbers (`font-mono tabular-nums`), inline 40px micro-bars for ICP fit scores, and multi-row selection for batch operations. |
-| **Slide-Over Inspector & Dossier** | Selecting an account opens a sleek slide-over drawer with a subtle backdrop. Click **"Expand to Full Page Dossier"** (`Maximize2` icon) to expand all intelligence tabs across the full viewport. |
-| **5 Intelligence Tabs** | **1.** Overview & Decision Makers &nbsp;|&nbsp; **2.** Battlecard Studio &nbsp;|&nbsp; **3.** Drift Feed & Delta Signals &nbsp;|&nbsp; **4.** 3-Step Outreach Cadence &nbsp;|&nbsp; **5.** Factuality Audit & Token Costs |
-| **Keyboard Ergonomics** | `J` / `K` (row selection), `Enter` (inspect account), `Esc` (dismiss drawer), and `⌘K` / `Ctrl+K` (Raycast-style command palette). |
+* **Full-Width DataGrid**: High-density 32px row heights displaying 25+ target accounts above the fold, monospace tabular metrics, inline 40px ICP fit micro-bars, and multi-row selection for bulk operations.
+* **Slide-Over Inspector & Executive Dossier**: Inspecting an account opens a slide-over panel with an interactive backdrop. The panel can be expanded to full-screen view (`Maximize2`) for multi-column executive reviews.
+* **Five Intelligence Views**:
+  1. **Overview & ICP Profile**: ARR, headcount, verified decision makers, and operational pain points.
+  2. **Battlecard Studio**: Key differentiators, win themes, discovery landmines, and 1-click objection copy.
+  3. **Drift Feed**: Chronological delta signals tracking pricing modifications, hiring surges, and feature changes.
+  4. **Outreach Cadence**: 3-step cold outbound sequence with 1-click Apollo.io CSV export.
+  5. **Telemetry & Audit**: Grounding scores, source citation links, execution latency, and USD token costs.
+* **Keyboard-First Controls**: `J` / `K` (navigate rows), `Enter` (inspect account), `Esc` (close drawer), and `⌘K` / `Ctrl+K` (command palette).
 
 ---
 
@@ -184,9 +186,6 @@ cd Pulse
 # Sync Python virtual environment & dependencies
 uv sync
 
-# Run the complete test suite (27 tests)
-uv run pytest tests/
-
 # Launch the FastAPI backend on dedicated port 8001
 uv run python main.py
 ```
@@ -197,22 +196,30 @@ uv run python main.py
 
 ### 2. Frontend Deployment (`Next.js 14`)
 
-In a new terminal:
+In a separate terminal:
 
 ```bash
 cd frontend
 
-# Install Node modules
+# Install dependencies and start development server
 npm install
-
-# Run the Next.js development server
 npm run dev
 ```
 * Frontend Workspace: **`http://localhost:3000`**
 
 ---
 
-### 3. Environment Credentials
+### 3. Testing
+
+Execute the automated test suite covering API gateways, drift comparison, circuit breakers, and Seltz tool resilience:
+
+```bash
+uv run pytest tests/
+```
+
+---
+
+### 4. Environment Credentials
 
 Copy `.env.example` to `.env`:
 ```bash
@@ -289,48 +296,6 @@ data: {"status": "SUCCESS", "target_domain": "datadog.com", "quality_grade": "A"
 
 ---
 
-## Automated Testing & Production Verification
-
-Pulse maintains **100% pass rate across 27 automated tests** spanning unit, integration, resilience, and concurrency tests:
-
-```bash
-uv run pytest tests/ -v
-```
-
-```text
-tests/test_api.py::test_health_check PASSED                             [  3%]
-tests/test_api.py::test_get_drift PASSED                                [  7%]
-tests/test_api.py::test_scan_with_ttl_caching PASSED                   [ 11%]
-tests/test_api.py::test_create_scan_job_and_stream PASSED                [ 14%]
-tests/test_api.py::test_audit_logs_endpoints PASSED                     [ 18%]
-tests/test_api.py::test_sse_stream_multi_subscriber PASSED              [ 22%]
-tests/test_api.py::test_accounts_crud_endpoints PASSED                  [ 25%]
-tests/test_daemon.py::test_daemon_single_cycle PASSED                   [ 29%]
-tests/test_daemon.py::test_daemon_graceful_stop PASSED                  [ 33%]
-tests/test_drift_engine.py::test_save_snapshot PASSED                   [ 37%]
-tests/test_drift_engine.py::test_detect_drift_no_change PASSED          [ 40%]
-tests/test_drift_engine.py::test_detect_drift_with_changes PASSED       [ 44%]
-tests/test_integrations.py::test_crm_deal_sync PASSED                   [ 48%]
-tests/test_integrations.py::test_slack_bot_slash_command PASSED        [ 51%]
-tests/test_integrations.py::test_apollo_csv_export PASSED               [ 55%]
-tests/test_logging_and_evaluation.py::test_audit_logger_run_lifecycle PASSED [ 59%]
-tests/test_logging_and_evaluation.py::test_evaluator_quality_scorecard PASSED [ 62%]
-tests/test_robustness.py::test_seltz_search_tool_resilience PASSED     [ 66%]
-tests/test_robustness.py::test_seltz_answer_tool_resilience PASSED     [ 70%]
-tests/test_robustness.py::test_circuit_breaker_trips_and_recovers PASSED [ 74%]
-tests/test_robustness.py::test_http_client_timeouts PASSED             [ 77%]
-tests/test_robustness.py::test_concurrency_semaphore PASSED            [ 81%]
-tests/test_seltz_engine.py::test_seltz_engine_initialization PASSED    [ 85%]
-tests/test_seltz_engine.py::test_seltz_engine_search_fallback PASSED   [ 88%]
-tests/test_seltz_engine.py::test_seltz_engine_full_run PASSED          [ 92%]
-tests/test_seltz_tool.py::test_seltz_search_tool_fallback PASSED       [ 96%]
-tests/test_seltz_tool.py::test_seltz_answer_tool PASSED               [100%]
-
-======================== 27 passed in 14.71s ========================
-```
-
----
-
 ## Directory Topology
 
 ```
@@ -367,15 +332,15 @@ Pulse/
 ├── frontend/                              # Next.js 14 Production Workspace
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── globals.css                # 2026 Dark Monochrome Design Tokens
+│   │   │   ├── globals.css                # Monochrome Design Tokens
 │   │   │   ├── layout.tsx                 # Root layout & font configuration
 │   │   │   └── page.tsx                   # Main workspace page
 │   │   ├── components/
 │   │   │   ├── GtmWorkspace.tsx           # Workspace Coordinator & State
 │   │   │   ├── Topbar.tsx                 # System Telemetry & Quick Actions
-│   │   │   ├── DataGrid.tsx               # 100% Full-Width Ultra-Dense Table
+│   │   │   ├── DataGrid.tsx               # Full-Width Ultra-Dense Table
 │   │   │   ├── InspectorDrawer.tsx        # Slide-over & Executive Dossier View
-│   │   │   └── CommandPalette.tsx         # Raycast-Style ⌘K Command Palette
+│   │   │   └── CommandPalette.tsx         # Command Palette (Cmd+K)
 │   │   ├── lib/
 │   │   │   └── api.ts                     # REST & SSE Streaming Client (:8001)
 │   │   └── types/

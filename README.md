@@ -347,15 +347,7 @@ Pulse/
 │   │       └── gtm.ts                     # TypeScript Type Definitions
 │   ├── package.json
 │   └── tailwind.config.ts
-└── tests/                                 # 27 Automated Tests
-    ├── test_api.py
-    ├── test_daemon.py
-    ├── test_drift_engine.py
-    ├── test_integrations.py
-    ├── test_logging_and_evaluation.py
-    ├── test_robustness.py
-    ├── test_seltz_engine.py
-    └── test_seltz_tool.py
+└── tests/                                 # 27 unit, integration, and resilience test suites
 ```
 
 ---
